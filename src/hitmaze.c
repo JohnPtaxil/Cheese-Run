@@ -3,7 +3,7 @@
 int touchingVLine(int lx, int ly, int lh, int px, int py, int pw, int ph)
 {
     int returnvalue = 0;
-    if ((lx >= px) || (lx <= (px + pw)))
+    if ((lx >= px) && (lx <= (px + pw)))
     {
         if ((py >= ly) && (py <= (ly + lh)))
             returnvalue = 1;
@@ -15,7 +15,7 @@ int touchingVLine(int lx, int ly, int lh, int px, int py, int pw, int ph)
 int touchingHLine(int lx, int ly, int lw, int px, int py, int pw, int ph)
 {
     int returnvalue = 0;
-    if ((ly >= py) || (ly <= (py + ph)))
+    if ((ly >= py) && (ly <= (py + ph)))
     {
         if ((px >= lx) && (px <= (lx + lw)))
             returnvalue = 1;

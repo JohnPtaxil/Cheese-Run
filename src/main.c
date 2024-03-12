@@ -17,6 +17,8 @@ volatile uint32_t milliseconds;
 // Function to play sound in background
 void playTune(uint32_t * the_notes, uint32_t * the_times, int length, int repeat);
 
+int touchingVLine(int lx, int ly, int lh, int px, int py, int pw, int ph);
+int touchingHLine(int lx, int ly, int lw, int px, int py, int pw, int ph);
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 160
 
@@ -100,7 +102,20 @@ int tune_playing = 1;
 int tune_index = 0;
 int tune_time_remaining = 0;
 int tune_repeat = 0;
+typedef struct {
+	int x,y,h,w;
+	uint16_t colour;
+} line_segment;
+#define MAZE1_SIZE 2
+line_segment maze1[]={ {1,2,3,4,0} ,{5,6,7,8,0} };
 
+void drawMaze1()
+{
+	for (int i=0;i < MAZE1_SIZE;i++)
+	{
+		drawLine(maze1[i].x,maze1[i].y,maze1[i].x+maze1[i].w,maze1[i].y+maze1[i].h,maze1[i].colour);
+	}
+}
 int main()
 {
 	int hinverted = 0;
@@ -222,13 +237,24 @@ int main()
 		}
 		if ((vmoved) || (hmoved))
 		{
+			if (touchingVLine(80,0,160,x,y,16,16) )
+			{
+				x = oldx;
+				y = oldy;
+				continue;	
+			}
+			
 			// only redraw if there has been some movement (reduces flicker)
 			fillRectangle(oldx,oldy,16,16,RGBToWord(5,28,12));
+
 			oldx = x;
 			oldy = y;	
 
 			if (hmoved)
 			{
+			
+
+
 				// Change to Spite 1 of mouse (stationary)
 				if (toggle == 0)
 				{
@@ -392,7 +418,7 @@ void maze_level1(int level)
 
     // Set Lines for maze borders 
     // Vertical Line Set
-    drawLine(18,159,18,121,0);
+   /* drawLine(18,159,18,121,0);
     drawLine(104,138,104,159,0);
     drawLine(69,104,69,138,0);
     drawLine(52,86,52,159,0);
@@ -410,6 +436,7 @@ void maze_level1(int level)
     drawLine(69,104,69,138,0);
     drawLine(87,121,87,138,0);
 
+	
     // Horizontal Line Set
     drawLine(18,121,35,121,0);
     drawLine(35,138,52,138,0);
@@ -427,7 +454,8 @@ void maze_level1(int level)
     drawLine(69,104,87,104,0);
     drawLine(69,138,87,138,0);
     drawLine(87,121,127,121,0);
-    drawLine(69,138,87,138,0);
+    drawLine(69,138,87,138,0);*/
+	drawLine(80,0,80,160,0);
 } // End Function
 
 /*
