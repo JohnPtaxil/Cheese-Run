@@ -14,11 +14,25 @@ void enablePullUp(GPIO_TypeDef *Port, uint32_t BitNumber);
 void pinMode(GPIO_TypeDef *Port, uint32_t BitNumber, uint32_t Mode);
 volatile uint32_t milliseconds;
 
+// Functions to turn on lights and off
+void lightOneOn(void);
+void lightTwoOn(void);
+void lightThreeOne(void);
+
+void lightOneOff(void);
+void lightTwoOff(void);
+void lightThreeOff(void);
+
+void victoryFlash(void);
+
 // Function to play sound in background
 void playTune(uint32_t * the_notes, uint32_t * the_times, int length, int repeat);
 
+// Functions for border collision
 int touchingVLine(int lx, int ly, int lh, int px, int py, int pw, int ph);
 int touchingHLine(int lx, int ly, int lw, int px, int py, int pw, int ph);
+
+// Symbolic Names for screen size
 #define SCREEN_WIDTH 128
 #define SCREEN_HEIGHT 160
 
@@ -88,11 +102,53 @@ const uint16_t poofgreen3[]=
 //uint32_t tune1_notes[] = {GS4_Ab4,G4,GS5_Ab5,C4,DS4_Eb4,0,G4,GS4_Ab4,F4,0,F4,F4,G4,GS4_Ab4,AS4_Bb4,G4,F4,F4,G4,G4,0,C5,C5,0,F4,GS4_Ab4,0,GS4_Ab4,AS4_Bb4,0,GS4_Ab4,G4,F4,0,F4,DS5_Eb5,C5,CS5_Db5,C5,AS4_Bb4,0};
 //uint32_t tune1_times[] = {250,1750,250,750,2500,500,250,750,1500,750,750,250,750,250,1000,250,500,250,1000,1750,250,1250,500,250,500,1500,250,1000,334,333,333,500,500,250,750,3000,250,500,1250,500};
 
-uint32_t tune2_notes[] = {F4,D4,0,C4,D4,F4,A4,A4,A4,A4,G4,G4,AS4_Bb4,0,G4,DS4_Eb4,0,D4,AS3_Bb3,D4,C4,0,F4,D4,0,C4,D4,F4,A4,G4,0,G4,A4,G4,0,G4,AS4_Bb4,0,AS4_Bb4,AS4_Bb4,0,AS4_Bb4,AS4_Bb4,FS4_Gb4,F4,FS4_Gb4,F4,FS4_Gb4,F4,D4,C4,D4,FS3_Gb3,AS3_Bb3,D4,D4,D4,C4,D4,F4,D4,D4,F4,A4,G4,0,AS3_Bb3,C4,AS3_Bb3,F4,0,AS4_Bb4,G4,0,F4,G4,F4,0,D4,D4,D4,0,A3,A3,0,AS3_Bb3,0};
-uint32_t tune2_times[] = {500,500,834,166,334,166,500,334,166,334,500,166,500,334,166,166,334,334,166,500,500,500,500,500,834,166,334,166,334,166,450,50,334,166,334,166,166,166,166,166,166,166,334,166,334,166,500,500,500,334,166,334,500,166,334,166,334,166,500,500,500,334,166,334,166,834,166,334,166,500,1000,500,1000,334,166,334,166,666,166,166,166,166,166,166,166,666,1000};
+uint32_t level1_notes[] = {F4,D4,0,C4,D4,F4,A4,A4,A4,A4,G4,G4,AS4_Bb4,0,G4,DS4_Eb4,0,D4,AS3_Bb3,D4,C4,0,F4,D4,0,C4,D4,F4,A4,G4,0,G4,A4,G4,0,G4,AS4_Bb4,0,AS4_Bb4,AS4_Bb4,0,AS4_Bb4,AS4_Bb4,FS4_Gb4,F4,FS4_Gb4,F4,FS4_Gb4,F4,D4,C4,D4,FS3_Gb3,AS3_Bb3,D4,D4,D4,C4,D4,F4,D4,D4,F4,A4,G4,0,AS3_Bb3,C4,AS3_Bb3,F4,0,AS4_Bb4,G4,0,F4,G4,F4,0,D4,D4,D4,0,A3,A3,0,AS3_Bb3,0};
+uint32_t level1_times[] = {500,500,834,166,334,166,500,334,166,334,500,166,500,334,166,166,334,334,166,500,500,500,500,500,834,166,334,166,334,166,450,50,334,166,334,166,166,166,166,166,166,166,334,166,334,166,500,500,500,334,166,334,500,166,334,166,334,166,500,500,500,334,166,334,166,834,166,334,166,500,1000,500,1000,334,166,334,166,666,166,166,166,166,166,166,166,666,1000};
 
 uint32_t sound_win[] = {C5,F4,C5,D5};
 uint32_t win_times[] = {300,300,300,1200};
+
+int linexv[] =    {66,109,88,44,109,21,44,88,66,88,44,21}; // top left x coord
+int linexlenv[] = {66,21,45,24,25,23,23,23,45,50,24,26}; // higher y value - lower y value
+int lineyv[] =    {0,0,44,21,44,66,66,66,89,110,110,134}; // top left y coord
+
+/*
+Cillians maze:
+int linexv[] =    {20,41,40,85,61,104}; // top left x coord
+int linexlenv[] = {138,20,50,24,29,27}; // higher y value - lower y value
+int lineyv[] =    {22,43,87,63,108,130}; // top left y coord
+
+
+*/
+
+// Arrays for Wall Collisions of level 1
+int level1xh[] = {0,21,88,109,0,44,66,0,44,88,66,109}; // x1
+int level1yh[] = {21,45,21,66,66,66,89,110,110,110,134,134}; // y1
+int level1lenh[] = {21,45,21,21,21,22,43,21,22,21,22,21}; // x2-x1
+
+/*
+	Sample: 
+
+	drawLine(0,21,21,21,0);
+
+	0 (first parameter) will map to first element of linxh[] function as it is x1
+	21 (second parameter) will map to first element of level1yh[] function as it is y1
+	lastly the corresponding value in the last function is of the formula: x2 - x1,
+	in this example it is 21 (third parameter) - 0 (first parameter) = 21 which goes 
+	into the last function in the same index as you put your other values
+
+	IMPORTANT: the function drawLine(0,21,21,21,0); format is IMPORTANT, the first two 
+	values (x1 and y1) must be the points CLOSEST TO THE TOP LEFT CORNER i.e. their values
+	should be equal to or less than the second set of values in this example, (0,21) is equal
+	to or less than (21,21) thus you can use the template above, if your drawline functions 
+	are different to this layout the above WILL NOT WORK, either you must rearrange your 
+	original drawline functions to match the above template or reshuffle where you pass
+	each parameter.
+
+	NOTE: THIS TEMPLATE IS ONLY FOR THE HORIZONTAL LINE FUNCTIONS, VERTICAL LINES BEHAVE DIFFERENTLY
+
+
+*/
 
 // For background music
 uint32_t *notes;
@@ -140,6 +196,9 @@ int main()
 	setupIO();
 	initSound();
 
+	pinMode(GPIOB,3,1); // Make GPIOA bit 3 an output
+	pinMode(GPIOA,0,1); // Make GPIOA bit 0 an output
+	pinMode(GPIOA,1,1); // Make GPIOA bit 1 an output
 
 	while(1)
 	{
@@ -158,7 +217,7 @@ int main()
 				maze_level1(level);
 
 				// Play Level 1 music 
-				playTune(tune2_notes,tune2_times,tune_length,0);
+				playTune(level1_notes,level1_times,tune_length,0);
 
 				// Prepare levelSet for next level
 				levelSet++;
@@ -173,9 +232,7 @@ int main()
 				// Play Zero Note
 				playTune(0,0,100,0);
 		
-				level1_pass(oldx,oldy,level);	
-
-				fillRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,0);
+				level1_pass(oldx,oldy,level);
 
 				level++;
 			}
@@ -237,12 +294,28 @@ int main()
 		}
 		if ((vmoved) || (hmoved))
 		{
-			if (touchingVLine(80,0,160,x,y,16,16) )
+			
+			for (int i = 0; i < 12; i++ )
 			{
-				x = oldx;
-				y = oldy;
-				continue;	
+				if (touchingVLine(linexv[i],lineyv[i],linexlenv[i],x,y,16,16) || touchingHLine(level1xh[i],level1yh[i],level1lenh[i],x,y,16,16))
+				{
+					x = oldx;
+					y = oldy;
+					continue;	
+				}
 			}
+
+			/*
+			for (int i = 0; i < 1; i++)
+			{
+				if (touchingHLine(level1xh[i],level1yh[i],16,x,y,16,16))
+				{
+					x = oldx;
+					y = oldy;
+					continue;
+				}
+			}
+			*/
 			
 			// only redraw if there has been some movement (reduces flicker)
 			fillRectangle(oldx,oldy,16,16,RGBToWord(5,28,12));
@@ -289,8 +362,8 @@ int main()
 					toggle = 0;
 				}	
 			}
-		}		
-		delay(50);
+		}
+		delay(30);
 	}
 
 	return 0;
@@ -418,44 +491,55 @@ void maze_level1(int level)
 
     // Set Lines for maze borders 
     // Vertical Line Set
-   /* drawLine(18,159,18,121,0);
-    drawLine(104,138,104,159,0);
-    drawLine(69,104,69,138,0);
-    drawLine(52,86,52,159,0);
-    drawLine(18,104,18,86,0);
-    drawLine(35,18,35,35,0);
-    drawLine(35,52,35,104,0);
-    drawLine(52,0,52,69,0);
-    drawLine(69,0,69,18,0);
-    drawLine(87,18,87,52,0);
-    drawLine(121,52,121,104,0);
-    drawLine(104,18,104,35,0);
-    drawLine(69,52,69,86,0);
-    drawLine(104,69,104,104,0);
-    drawLine(87,86,87,104,0);
-    drawLine(69,104,69,138,0);
-    drawLine(87,121,87,138,0);
+
+	drawLine(66,0,66,66,0);
+	drawLine(109,0,109,21,0);
+	drawLine(88,44,88,89,0);
+	drawLine(44,21,44,45,0);
+	drawLine(109,44,109,66,0);
+	drawLine(21,66,21,89,0);
+	drawLine(44,66,44,89,0);
+	drawLine(88,66,88,89,0);
+	drawLine(66,89,66,134,0);
+	drawLine(88,110,88,160,0);
+	drawLine(44,110,44,134,0);
+	drawLine(21,134,21,160,0);
 
 	
     // Horizontal Line Set
-    drawLine(18,121,35,121,0);
-    drawLine(35,138,52,138,0);
-    drawLine(0,104,18,104,0);
-    drawLine(0,52,18,52,0);
-    drawLine(0,18,35,18,0);
-    drawLine(18,35,35,35,0);
-    drawLine(18,69,52,69,0);
-    drawLine(52,35,69,35,0);
-    drawLine(87,52,121,52,0);
-    drawLine(104,18,127,18,0);
-    drawLine(104,35,112,35,0);
-    drawLine(52,86,69,86,0);
-    drawLine(69,69,104,69,0);
-    drawLine(69,104,87,104,0);
-    drawLine(69,138,87,138,0);
-    drawLine(87,121,127,121,0);
-    drawLine(69,138,87,138,0);*/
-	drawLine(80,0,80,160,0);
+	drawLine(0,21,21,21,0);
+	drawLine(21,45,66,45,0);
+	drawLine(88,21,109,21,0);
+	drawLine(109,66,128,66,0);
+	drawLine(0,66,21,66,0);
+	drawLine(44,66,66,66,0);
+	drawLine(66,89,109,89,0);
+	drawLine(0,110,21,110,0);
+	drawLine(44,110,66,110,0);
+	drawLine(88,110,109,110,0);
+	drawLine(66,134,88,134,0);
+	drawLine(109,134,128,134,0);
+	/*
+	drawLine(20, 160, 20, 22, 0);
+	drawLine(41, 43, 41, 63, 0);
+	drawLine(61, 137, 61, 108, 0);
+	drawLine(104, 130, 104, 160, 0);
+	drawline(40, 136, 40, 87, 0);
+	drawline(85, 63, 85, 87, 0);
+
+	// Horizontal lines
+
+	//drawline(127, 160, 16, 159, 0);
+	drawline(20, 22, 107, 22, 0);
+	drawLine(126, 43, 41, 43, 0);
+	drawLine(126, 83, 105, 83, 0);
+	drawLine(125, 108, 61, 108, 0);
+	drawLine(83, 130, 104, 130, 0);
+	drawLine(20, 107, 40, 107, 0);
+	drawLine(40, 87, 85, 87, 0);
+	drawLine(64, 63, 104, 63, 0);
+	*/
+
 } // End Function
 
 /*
@@ -493,9 +577,6 @@ void level1_pass(uint16_t oldx, uint16_t oldy, int level)
 	// Stop Win Sound
 	playNote(0);
 
-	// Turn On First LED (level 1 passed)
-
-
 	// Print SHABOOYAH
 	printTextX2("SHABOOYAH", 11, 20, RGBToWord(188,0,255), RGBToWord(5,28,12));
 
@@ -522,6 +603,13 @@ void level1_pass(uint16_t oldx, uint16_t oldy, int level)
 	putImage(86,120,40,40,poofgreen3,0,0);
 
 	delay(500);
+
+	victoryFlash();
+
+	lightOneOn();
+
+
+	fillRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,0);
 } // End Function
 
 /*
@@ -590,8 +678,7 @@ void level3_pass(uint16_t oldx, uint16_t oldy)
 		delay(600);
 
 		putImage(113,145,15,15,poof0,0,0);
-
-		delay(300);
+[]		delay(300);
 
 		putImage(111,143,20,20,poof1,0,0);
 
@@ -623,6 +710,71 @@ void playTune(uint32_t * the_notes, uint32_t * the_times, int length, int repeat
 	tune_repeat = repeat;
 	tune_playing = 1;
 	tune_time_remaining = note_times[0];
+}
+
+// Functions to turn on lights on and off
+void lightOneOn()
+{
+	GPIOB->ODR = GPIOB->ODR | (1 << 3);
+}
+
+void lightOneOff()
+{
+	GPIOB->ODR = GPIOB->ODR & (0 << 3);
+}
+
+void lightTwoOn()
+{
+	GPIOA->ODR = GPIOA->ODR | (1 << 0);
+}
+
+void lightTwoOff()
+{
+	GPIOA->ODR = GPIOA->ODR & (0 << 0);
+}
+	
+
+void lightThreeOn()
+{
+	GPIOA->ODR = GPIOA->ODR | (1 << 1);
+}
+
+void lightThreeOff()
+{
+	GPIOA->ODR = GPIOA->ODR & (0 << 1);
+}
+
+void victoryFlash()
+{
+	lightOneOn();
+	delay(700);
+
+	lightTwoOn();
+	delay(700);
+
+	lightThreeOn();
+	delay(700);
+
+	lightOneOff();
+	lightTwoOff();
+	lightThreeOff();
+
+	delay(500);
+
+	for (int i = 0; i < 3; i++)
+	{
+		lightOneOn();
+		lightTwoOn();
+		lightThreeOn();
+
+		delay(400);
+
+		lightOneOff();
+		lightTwoOff();
+		lightThreeOff();
+
+		delay(400);
+	}
 }
 
 /*

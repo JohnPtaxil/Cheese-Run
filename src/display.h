@@ -23,9 +23,5 @@ void level1_pass(uint16_t,uint16_t,int); // Function for when the player passes 
 void level2_pass(uint16_t,uint16_t,int); // Function for when the player passes level 2
 void level3_pass(uint16_t,uint16_t); // Function for when the player passes final level
 
-// Functions for border collisions for maze walls
-int touchingVline(int,int,int,int,int,int,int);
-int touchingHline(int,int,int,int,int,int,int);
-
 // Function for handling movement for level 1
 void movement1(int,int,int,int,int,uint16_t,uint16_t,uint16_t,uint16_t);

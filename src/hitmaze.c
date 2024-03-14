@@ -19,7 +19,7 @@ int touchingHLine(int lx, int ly, int lw, int px, int py, int pw, int ph)
     {
         if ((px >= lx) && (px <= (lx + lw)))
             returnvalue = 1;
-        if (((py + pw) >= lx) && ((pw + pw) <= (lx + lw)))
+        if (((px + pw) >= lx) && ((px + pw) <= (lx + lw)))
             returnvalue = 1;
     }
     return returnvalue;
