@@ -17,7 +17,7 @@ volatile uint32_t milliseconds;
 // Functions to turn on lights and off
 void lightOneOn(void);
 void lightTwoOn(void);
-void lightThreeOne(void);
+void lightThreeOn(void);
 
 void lightOneOff(void);
 void lightTwoOff(void);
@@ -196,10 +196,6 @@ int main()
 	setupIO();
 	initSound();
 
-	pinMode(GPIOB,3,1); // Make GPIOA bit 3 an output
-	pinMode(GPIOA,0,1); // Make GPIOA bit 0 an output
-	pinMode(GPIOA,1,1); // Make GPIOA bit 1 an output
-
 	while(1)
 	{
 		// Code for showing main menu
@@ -218,7 +214,7 @@ int main()
 
 				// Play Level 1 music 
 				playTune(level1_notes,level1_times,tune_length,0);
-
+	
 				// Prepare levelSet for next level
 				levelSet++;
 			}
@@ -232,7 +228,13 @@ int main()
 				// Play Zero Note
 				playTune(0,0,100,0);
 		
-				level1_pass(oldx,oldy,level);
+				level1_pass(oldx,oldy);
+
+				printTextX2("Level 1", 25, 20, RGBToWord(0,204,0),0);
+
+				delay(2000);
+
+				printTextX2("COMPLETED", 11, 40, RGBToWord(255,255,0),0);
 
 				level++;
 			}
@@ -294,7 +296,7 @@ int main()
 		}
 		if ((vmoved) || (hmoved))
 		{
-			
+			/*
 			for (int i = 0; i < 12; i++ )
 			{
 				if (touchingVLine(linexv[i],lineyv[i],linexlenv[i],x,y,16,16) || touchingHLine(level1xh[i],level1yh[i],level1lenh[i],x,y,16,16))
@@ -302,17 +304,6 @@ int main()
 					x = oldx;
 					y = oldy;
 					continue;	
-				}
-			}
-
-			/*
-			for (int i = 0; i < 1; i++)
-			{
-				if (touchingHLine(level1xh[i],level1yh[i],16,x,y,16,16))
-				{
-					x = oldx;
-					y = oldy;
-					continue;
 				}
 			}
 			*/
@@ -473,10 +464,19 @@ void setupIO()
 	pinMode(GPIOB,5,0);
 	pinMode(GPIOA,8,0);
 	pinMode(GPIOA,11,0);
+
+	pinMode(GPIOB,3,1); // Make GPIOB bit 3 an output
+	pinMode(GPIOA,0,1); // Make GPIOA bit 0 an output
+	pinMode(GPIOA,1,1); // Make GPIOA bit 1 an output
+
 	enablePullUp(GPIOB,4);
 	enablePullUp(GPIOB,5);
 	enablePullUp(GPIOA,11);
 	enablePullUp(GPIOA,8);
+
+	enablePullUp(GPIOB,1);
+	enablePullUp(GPIOA,0);
+	enablePullUp(GPIOA,1);
 }
 
 // Function to set display to level 1 (grass maze)
@@ -561,7 +561,7 @@ void maze_level3(void)
 */
 
 // Function that runs when the player is on level 1 and eats the cheese
-void level1_pass(uint16_t oldx, uint16_t oldy, int level)
+void level1_pass(uint16_t oldx, uint16_t oldy)
 {
 	// Delay before explosion animation 
 	playNote(0);
@@ -576,9 +576,6 @@ void level1_pass(uint16_t oldx, uint16_t oldy, int level)
 
 	// Stop Win Sound
 	playNote(0);
-
-	// Print SHABOOYAH
-	printTextX2("SHABOOYAH", 11, 20, RGBToWord(188,0,255), RGBToWord(5,28,12));
 
 	// Cover old image of mouse
 	fillRectangle(oldx,oldy,16,16,RGBToWord(10,51,22));
@@ -604,12 +601,11 @@ void level1_pass(uint16_t oldx, uint16_t oldy, int level)
 
 	delay(500);
 
-	victoryFlash();
+	fillRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,0);
 
 	lightOneOn();
 
-
-	fillRectangle(0,0,SCREEN_WIDTH,SCREEN_HEIGHT,0);
+	lightOneOff();
 } // End Function
 
 /*
@@ -678,7 +674,7 @@ void level3_pass(uint16_t oldx, uint16_t oldy)
 		delay(600);
 
 		putImage(113,145,15,15,poof0,0,0);
-[]		delay(300);
+		delay(300);
 
 		putImage(111,143,20,20,poof1,0,0);
 
@@ -755,25 +751,21 @@ void victoryFlash()
 	lightThreeOn();
 	delay(700);
 
-	lightOneOff();
-	lightTwoOff();
-	lightThreeOff();
 
-	delay(500);
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 3; i ++)
 	{
 		lightOneOn();
 		lightTwoOn();
 		lightThreeOn();
 
-		delay(400);
+		delay(500);
 
 		lightOneOff();
 		lightTwoOff();
 		lightThreeOff();
 
-		delay(400);
+		delay(500);
 	}
 }
 

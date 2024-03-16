@@ -19,8 +19,8 @@ void maze_level2(void);
 void maze_level3(void);
 
 // These functions pass oldx, oldy, and the level number and return the new level number
-void level1_pass(uint16_t,uint16_t,int); // Function for when the player passes level 1
-void level2_pass(uint16_t,uint16_t,int); // Function for when the player passes level 2
+void level1_pass(uint16_t,uint16_t); // Function for when the player passes level 1
+void level2_pass(uint16_t,uint16_t); // Function for when the player passes level 2
 void level3_pass(uint16_t,uint16_t); // Function for when the player passes final level
 
 // Function for handling movement for level 1
