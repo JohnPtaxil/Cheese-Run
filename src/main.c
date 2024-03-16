@@ -4,6 +4,10 @@
 #include "musical_notes.h"
 #include "serial.h"
 
+// Symbolic Names for screen size
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 160
+
 void initClock(void);
 void initSysTick(void);
 void SysTick_Handler(void);
@@ -32,9 +36,18 @@ void playTune(uint32_t * the_notes, uint32_t * the_times, int length, int repeat
 int touchingVLine(int lx, int ly, int lh, int px, int py, int pw, int ph);
 int touchingHLine(int lx, int ly, int lw, int px, int py, int pw, int ph);
 
-// Symbolic Names for screen size
-#define SCREEN_WIDTH 128
-#define SCREEN_HEIGHT 160
+// Functions to set display for each level
+void maze_level1(int);
+void maze_level2(void); 
+void maze_level3(void);
+
+// These functions pass oldx, oldy, and the level number and return the new level number
+void level1_pass(uint16_t,uint16_t); // Function for when the player passes level 1
+void level2_pass(uint16_t,uint16_t); // Function for when the player passes level 2
+void level3_pass(uint16_t,uint16_t); // Function for when the player passes final level
+
+// Function for handling movement for level 1
+void movement1(int,int,int,int,int,uint16_t,uint16_t,uint16_t,uint16_t);
 
 // Mouse and Cheese Sprites
 const uint16_t mouse1[]=
@@ -217,6 +230,14 @@ int main()
 	
 				// Prepare levelSet for next level
 				levelSet++;
+
+				lightThreeOn();
+
+				delay(500);
+
+				lightThreeOff();
+				
+
 			}
 			
 
@@ -464,19 +485,34 @@ void setupIO()
 	pinMode(GPIOB,5,0);
 	pinMode(GPIOA,8,0);
 	pinMode(GPIOA,11,0);
-
 	pinMode(GPIOB,3,1); // Make GPIOB bit 3 an output
-	pinMode(GPIOA,0,1); // Make GPIOA bit 0 an output
-	pinMode(GPIOA,1,1); // Make GPIOA bit 1 an output
+	pinMode(GPIOB,0,1); // Make GPIOB bit 0 an output
+
+	// Testers
+	pinMode(GPIOF,0,1);
+	pinMode(GPIOF,1,1);
+	pinMode(GPIOA,0,1);
+	pinMode(GPIOA,2,1);
+	pinMode(GPIOA,9,1);
+	pinMode(GPIOA,10,1);
+	pinMode(GPIOA,12,1);
 
 	enablePullUp(GPIOB,4);
 	enablePullUp(GPIOB,5);
 	enablePullUp(GPIOA,11);
 	enablePullUp(GPIOA,8);
-
-	enablePullUp(GPIOB,1);
+	enablePullUp(GPIOB,3);
+	enablePullUp(GPIOB,0);
+	
+	// Testers (IDK if needed)
+	enablePullUp(GPIOF,0);
+	enablePullUp(GPIOF,1);
 	enablePullUp(GPIOA,0);
-	enablePullUp(GPIOA,1);
+	enablePullUp(GPIOA,2);
+	enablePullUp(GPIOA,9);
+	enablePullUp(GPIOA,10);
+	enablePullUp(GPIOA,12);
+
 }
 
 // Function to set display to level 1 (grass maze)
@@ -605,7 +641,10 @@ void level1_pass(uint16_t oldx, uint16_t oldy)
 
 	lightOneOn();
 
-	lightOneOff();
+	lightTwoOn();
+
+	lightThreeOn();
+
 } // End Function
 
 /*
@@ -721,23 +760,49 @@ void lightOneOff()
 
 void lightTwoOn()
 {
-	GPIOA->ODR = GPIOA->ODR | (1 << 0);
+	GPIOB->ODR = GPIOB->ODR | (1 << 0);
 }
 
 void lightTwoOff()
 {
-	GPIOA->ODR = GPIOA->ODR & (0 << 0);
+	GPIOB->ODR = GPIOB->ODR & (0 << 0);
 }
 	
 
 void lightThreeOn()
 {
-	GPIOA->ODR = GPIOA->ODR | (1 << 1);
+	//GPIOF->ODR = GPIOF->ODR | (1 << 0); // PF0 does nothing
+	//GPIOF->ODR = GPIOF->ODR | (1 << 1); // PF1 does nothing
+	GPIOA->ODR = GPIOA->ODR | (1 << 9); // PA9 light works
+	//GPIOA->ODR = GPIOA->ODR | (1 << 10); // PA10 light works
+	//GPIOA->ODR = GPIOA->ODR | (1 << 12); // PA12 light works
+
+	// "Avoid"
+
+	//GPIOA->ODR = GPIOA->ODR | (1 << 0); // PA0 light works
+	//GPIOA->ODR = GPIOA->ODR | (1 << 2); // PA2 light works
+
+	// Unlisted
+
+	//GPIOA->ODR = GPIOA->ODR | (1 << 1); // PA1 does nothing
 }
 
 void lightThreeOff()
 {
-	GPIOA->ODR = GPIOA->ODR & (0 << 1);
+	//GPIOF->ODR = GPIOF->ODR & (0 << 0); // PF0 does nothing
+	//GPIOF->ODR = GPIOF->ODR & (0 << 1); // PF1 does nothing
+	GPIOA->ODR = GPIOA->ODR & (0 << 9); // PA9 turn off kills  display
+	//GPIOA->ODR = GPIOA->ODR & (0 << 10); // PA10 turn off kills  display
+	//GPIOA->ODR = GPIOA->ODR & (0 << 12); // PA12 turn off kills  display
+
+	// "Avoid"
+
+	//GPIOA->ODR = GPIOA->ODR & (0 << 0); // PA0 turn off kills  display
+	//GPIOA->ODR = GPIOA->ODR & (0 << 2); // PA2 turn off kills  display
+
+	// Unlisted
+
+	//GPIOA->ODR = GPIOA->ODR & (0 << 1); // PA1 turn off kills  display
 }
 
 void victoryFlash()
@@ -751,7 +816,11 @@ void victoryFlash()
 	lightThreeOn();
 	delay(700);
 
+	lightOneOff();
+	lightTwoOff();
+	lightThreeOff();
 
+	delay(700);
 
 	for (int i = 0; i < 3; i ++)
 	{
@@ -768,6 +837,10 @@ void victoryFlash()
 		delay(500);
 	}
 }
+
+/*
+
+*/
 
 /*
 	To Do: 
