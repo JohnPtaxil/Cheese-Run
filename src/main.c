@@ -8,7 +8,11 @@ The space bar can be used to pause and unpause the
 game. and you win when you eat the cheese on all 
 three levels. HAVE FUN AND ENJOY!
 
-cillian quinn C23735019
+Cillian Quinn C23735019
+John Patacsil C23380086
+Justin McGarr C23421344
+
+
 
 */
 
