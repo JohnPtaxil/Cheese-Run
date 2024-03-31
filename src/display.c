@@ -152,7 +152,7 @@ void DCHigh()
 }
 void initSPI(void)
 {
-	uint32_t  drain_count,drain;
+	uint32_t  drain_count, drain;
 	
 	RCC->APB2ENR |= (1 << 12);		// turn on SPI1 	
 	

@@ -1,5 +1,18 @@
 #include <stm32f031x6.h>
 
+// Function to make it so, system is not always waiting for a key press
+int dataAvailable(void)
+{
+	if ((USART1->ISR & (1 << 5)) == 0)
+	{
+		return 0;
+	}
+	else 
+	{
+		return 1;
+	}
+}
+
 void initSerial()
 {
 	/* On the nucleo board, TX is on PA2 while RX is on PA15 */
