@@ -6,10 +6,12 @@
 **Authors:** John Patacsil, Justin McGarr, Cillian Quinn  
 **Result:** 87%
 
+![Game Demo](https://github.com/user-attachments/assets/a052217c-9494-4e81-bfa1-73e90d877daa)
+
 ## Description
 
 <details>
-  ![Game Demo](https://github.com/user-attachments/assets/a052217c-9494-4e81-bfa1-73e90d877daa)
+  <summary>Click to expand</summary>
 
   <br>
 
